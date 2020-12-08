@@ -1,0 +1,27 @@
+
+#+TITLE:     Readme for [[https://www.cemf.ir/center-of-engineering-and-multiscale-modeling-of-fluid-flow/dem-discrete-element-method/dem-codes/cemfdem/][cemfDEM code]]
+#+AUTHOR:               
+#+DATE:                  12th Dec. 2020
+#+LINK:                  https://cemf.ir
+
+* About cemfDEM
+ cemfDem code is a free, open source code for discerete element method (DEM)
+ simulaitons. It is developed in FORTRAN standard and can simulate spherical
+ particles. The code benefits from various optimization algorithms giving rise
+ to its execution speed. Therefore, simulating tens of thousand particles
+ within a reasonable time is possible. This code can be compiled and run under
+ both Windows- and Ubuntu-based operating systems.
+ 
+  - *Particles*: Particles with single size, or size distribution, or various density, or physical properties can be simulated.
+  - *Geometry*: The geometry of parts (container, blades and etc.) can be as simple as a cylindrical drum or as complex as a helical blade. A combination of linear and rotational motion can be specified for parts (blades). STL files can be imported into the program to define geometry parts. 
+  - *Integration*: Various integration methods from single-step to multi-step methods and with various numerical precision from the first order to fifths order are implemented in the code.
+  - *Contact force models*: Both linear and non-linear contact force with non-limited and limited tangential displacement models are available in the code as well as rolling friction models.
+  - *Contact search*: Efficient contact search methods suitable for systems single size and systems with wide size distribution are implemented in the code to be used. So, the simulations with multi-sized particles run as efficiently as the simulation with single size particles.
+* Copyright
+  cemfDEM is free software: you can redistribute it and/or modify it under the
+  terms of the GNU General Public License as published by the Free Software
+  Foundation, either version 3 of the License, or (at your option) any later
+  version.
+
+
+* [[https://cemf.ir][Documentation and more information]]
