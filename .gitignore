@@ -1,0 +1,6 @@
+mod/
+bin/
+obj/
+Results/ 
+.cemfDEM
+
