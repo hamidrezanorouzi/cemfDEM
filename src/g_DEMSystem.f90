@@ -401,7 +401,7 @@ subroutine DEMS_Init_rest(this, Geom, Property, minDomain, maxDomain , DEM_opt )
                              trim( num2str(this%m_PhysProp%get_numPrtclType() ) ) // &
                              " particle types and "//trim( num2str(this%m_PhysProp%get_numWallType() ) )// " wall types.", 2)
     
-    !>>> log info
+    !<<< log info
     
     ! Step4: Initializing contact force
    
@@ -1088,10 +1088,12 @@ subroutine DEMS_SetContactForce( this )
         
 	! initializing particle-particle contact list
         call MainLogInfo%OutInfo("Initializing particle-particle contact list object:",2)        
-            
+      	
             allocate( ContactList:: this%PP_Cont_List )
+	
             max_pp = int(PP_cntctList_Size * this%max_nPrtcl) + 1
             call this%PP_Cont_list%InitContactList( max_pp , this%max_nPrtcl )
+	
         
         call MainLogInfo%OutInfo("The container size is : "//trim(num2str(max_pp)),3)
         

@@ -106,7 +106,7 @@ module g_Prtcl_ContactList
     
     type, extends(base_ContactList):: ContactList
                 
-        type(ContactInfo1),pointer,dimension(:) :: ContPair
+        type(ContactInfo1),allocatable,dimension(:) :: ContPair
         
     contains
     
@@ -450,7 +450,7 @@ subroutine CL_DeallocateAll(this)
     class(ContactList):: this
     
     if(allocated(this%ContctStat)) deallocate(this%ContctStat)
-    if(associated(this%ContPair)) deallocate(this%ContPair)
+    if(allocated(this%ContPair)) deallocate(this%ContPair)
     
 end subroutine
   
