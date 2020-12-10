@@ -1,5 +1,5 @@
 
-#+TITLE:     Readme for [[https://www.cemf.ir/center-of-engineering-and-multiscale-modeling-of-fluid-flow/dem-discrete-element-method/dem-codes/cemfdem/][cemfDEM code]]
+#+TITLE:     Readme for [[https://www.cemf.ir/dem-discrete-element-method/cemfdem/][cemfDEM code]]
 #+AUTHOR:               
 #+DATE:                  12th Dec. 2020
 #+LINK:                  https://cemf.ir
