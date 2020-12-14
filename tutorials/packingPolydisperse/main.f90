@@ -43,7 +43,7 @@ program main
     ! options and settings for DEM simulation
     DEM_opt%gravity   = real3( 0.0, -9.8 , 0.0 )
     DEM_opt%SaveFreq  = 1000
-    DEM_opt%RunName   = "PackingBinary"
+    DEM_opt%RunName   = "PackingPolydisperse"
     DEM_opt%Res_Dir   = "./Results/"
     DEM_opt%OutputFileType = OP_Type_VTK !+  OP_Type_Tec
     DEM_opt%CT_model  = CTM_ConstantTorque

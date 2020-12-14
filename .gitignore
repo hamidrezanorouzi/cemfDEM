@@ -2,5 +2,6 @@ mod/
 bin/
 obj/
 Results/ 
-.cemfDEM
+cemfDEM
+*.[oa]
 

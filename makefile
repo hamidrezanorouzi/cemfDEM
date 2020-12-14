@@ -200,9 +200,9 @@ $(OBJDIR)/g_Prtcl_Insertion.o: $(OBJDIR)/g_PlaneWall.o
 
 
 clean:
-	rm -r -f $(allObjects) $(MODDIR)/*
+	rm -r -f $(allObjects) $(MODDIR)/* $(Exe)
 	@echo The build has been cleaned
 
 vtkClean:
-	rm -f -r *.vtk $(RESDIR)/*.vtk *.plt $(RESDIR)*.plt
+	rm -f -r $(RESDIR)/*.vtk $(RESDIR)/*.plt $(RESDIR)/Log*.txt
 	@echo The content of $(RESDIR) has been cleaned
