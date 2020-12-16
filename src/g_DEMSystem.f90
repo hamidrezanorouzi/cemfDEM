@@ -1172,7 +1172,7 @@ subroutine DEMS_User_prtclMark( this )
     
     do i=1, this%max_nPrtcl
         
-        !this%prtcl_usr_mark(i) = User_Mark( this%prtcl_ids(i), this%prtcl_flag(i), this%prtcl_type(i), this%prtcl_dpos(i))
+        this%prtcl_usr_mark(i) = User_Mark( this%prtcl_ids(i), this%prtcl_flag(i), this%prtcl_type(i), this%prtcl_dpos(i))
         
     end do
     
