@@ -21,7 +21,8 @@
   - *Contact search*: Efficient contact search methods suitable for systems single size and systems with wide size distribution are implemented in the code to be used. So, the simulations with multi-sized particles run as efficiently as the simulation with single size particles.
   
 * Important
-For more detials on numerical algorithms and physical models in the code, read the book [[https://www.wiley.com/en-us/Coupled+CFD+DEM+Modeling%3A+Formulation%2C+Implementation+and+Application+to+Multiphase+Flows-p-9781119005292]["Coupled CFD-DEM Modeling: Formulation, Implementation and Application to Multiphase Flows"]]. 
+For more detials on numerical algorithms and physical models in the code, read the book [[https://www.wiley.com/en-us/Coupled+CFD+DEM+Modeling%3A+Formulation%2C+Implementation+and+Application+to+Multiphase+Flows-p-9781119005292]["Coupled CFD-DEM Modeling: Formulation, Implementation and Application to Multiphase Flows"]].
+[[https://www.wiley.com/en-us/Coupled+CFD+DEM+Modeling%3A+Formulation%2C+Implementation+and+Application+to+Multiphase+Flows-p-9781119005292][file:images/book.jpg]] 
 
 * Copyright
   cemfDEM is free software: you can redistribute it and/or modify it under the
