@@ -1,24 +1,3 @@
-!-------------- cemfDEM code: a dem simulation code ----------------------------
-!      D        C enter of
-!     D M       E ngineering and
-!    D   M      M ultiscale modeling of
-!   D     M     F luid flow    
-!  EEEEEEEEM    .ir
-!------------------------------------------------------------------------------
-!  Copyright (C): cemf
-!  website: www.cemf.ir
-!------------------------------------------------------------------------------  
-!  This file is part of cemfDEM code. It is a free software for simulating 
-!  granular flow. You can redistribute it and/or modify it under the terms of
-!  GNU General Public License version 3 or any other later versions. 
-! 
-!  cemfDEM code is distributed to help others in their research in the field  
-!  of granular flow, but WITHOUT ANY WARRANTY; without even the implied 
-!  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-!------------------------------------------------------------------------------
-
-program main
-
     use g_DEMSystem
     use g_stl_reader
     use g_Prtcl_PureProperty
@@ -42,14 +21,14 @@ program main
 !//// Initial settings 
 
     ! options and settings for DEM simulation
-    DEM_opt%gravity   = real3( 0.0, -9.8, 0.0 )
+    DEM_opt%gravity   = real3( 0.0, 0.0, -9.8 )
     DEM_opt%SaveFreq  = 1000
-    DEM_opt%RunName   = "mixingRotatingDrumRolling"
+    DEM_opt%RunName   = "Continuous_Mixer"
     DEM_opt%Res_Dir   = "./Results/"
-    DEM_opt%OutputFileType = OP_Type_VTK
-    DEM_opt%CT_model  = CTM_ConstantTorque
-    DEM_opt%CF_Type   = CFT_nLin_nl
-    DEM_opt%CS_Method = CSM_NBS_Munjiza !_Hrchl !
+    DEM_opt%OutputFileType = OP_Type_VTK   ! vtk output
+    DEM_opt%CT_model  = CTM_ConstantTorque ! constant torque model
+    DEM_opt%CF_Type   = CFT_nLin_nl        ! non-linear model
+    DEM_opt%CS_Method = CSM_NBS_Munjiza_Hrchl !for polydisperse system
     DEM_opt%PI_Method = PIM_AB4AM5
     DEM_opt%PRI_Method= PIM_AB4AM5
     
@@ -61,58 +40,69 @@ program main
     !//// particles
     allocate(PSD)
     
-    ! 19000 particles with diameter of 3 mm
-    PSD  = PS_Distribution( 19000 , PSD_Uniform, 1 , 0.003_RK, 0.003_RK)
+    ! tri-modal distribution with size range between 3 to 6 mm                          
+    PSD  = PS_Distribution( 600000 , PSD_Uniform, 1 , 0.006_RK, 0.006_RK)
     
     ! associates particle size distribution with property
     allocate(PSDP)
     PSDP = PSD_Property( PSD , prop )
     deallocate(PSD)
    
-    ! positions particles inside the drum
-    allocate(Pos)
-    Pos = PSDP_Position( PSDP )
-    call Pos%PositionOrdered( real3(-0.071 , -0.071, 0.0), real3(0.071, 0.071, 0.03) )
-    
+        
 !// main components of DEM system    
     !//// geometry
     allocate(geom)
-    call ProgramDefinedGeometry(geom)
+    ! reads geometry from stl files                                                    
+    call geom%add_stl_file("./body.stl", 1, 1, .true. ) ! shell, user_id = 1
+    call geom%add_stl_file("./impeller.stl", 2, 1, .true. ) ! screw, user_id = 2
+    call geom%add_stl_file("./cylender.stl", 3, 1, .true. ) ! cylender, user_id = 3
+ 
+    ! separated output for geometry
+    ! user_id = 1: separate files with a name containing "body"
+    ! user_id = 2: separate files with a name containing "impeller"
+    call geom%setWallOutputName( (/1,2,3/) , (/"body","impe","cyle"/) )
             
-    !//// Property
+    !//// Property 
+      !!!DEM_Options ,dynamic friction, rolling friction, coefficient of normal restitution, coefficient of tangential restitution 
     allocate( Property )
     call Property%ParticleProperty( PSDP )    ! particles 
     call Property%WallProperty(1 , (/prop/) ) ! walls 
-    call Property%PP_BinaryProp(DEM_opt, 0.5_RK, 0.1_RK, 0.8_RK, 0.8_RK) ! binary pp
-    call Property%PW_BinaryProp(DEM_opt, 0.7_RK, 0.1_RK, 0.8_RK, 0.8_RK) ! binary pw
+    call Property%PP_BinaryProp(DEM_opt, 0.3_RK, 0.1_RK, 0.7_RK, 0.7_RK) ! binary pp       !!! inaro chi bezaram??
+    call Property%PW_BinaryProp(DEM_opt, 0.4_RK, 0.1_RK, 0.7_RK, 0.7_RK) ! binary pw
     
     !//// DEM system with particle insertion
     ! simulation domain
-    minDomain = real3(-0.11, -0.11,  -0.01)
-    maxDomain = real3( 0.11,  0.11 ,  0.04)
+    minDomain = real3(-0.11 , -0.01,  -0.13)
+    maxDomain = real3( 0.11,  0.65 ,  0.12)
     
-      
-    ! initializes DEM system, dt = 0.00002 sec.  
-    call DEM%Initialize( 0.00002_RK, Pos ,geom, Property, minDomain, maxDomain, DEM_opt ) 
-    
-    
-!//// iteration loop for 0.2 seconds. This lets particles settle under the gravity   
-    call DEM%iterate(10000)
-    
-   
-    !// sets the rotating velocity of drum, it is 10 RPM
-    call geom%setWallVelocity(1, real3(0,0,0), &
-                              RPMtoRAD_S(10.0_RK), &
-                              p_line( real3(0,0,0) , real3(0,0,0.2) ) )
-    
- !//// iteration for 0.8 more seconds to reach steady condition
-    call DEM%iterate(39999)
-    !// marks three groups of particles as tracers  
-    call DEM%User_prtclMark()
+    ! insertion plane near the inlet gate of conveyor
+    p1 = real3( -0.050 , 0.065, 0.101)
+    p2 = real3(  0.050, 0.065,0.101)
+    p3 = real3(  0.050 , 0.010,0.101)
+    p4 = real3( -0.050 , 0.010, 0.101)
+    res = insPlane%CreateWall_nv(p1,p2,p3,p4)
+  !!!----------------------------------------------------------------------------------------------------------------------------
+    ! initializes DEM system, dt = 0.00001 s, particles should be inserted during 2              !!!in chie?
+    ! million iterations (equivalent to 20 seconds)
+    call DEM%Initialize( 0.00001_RK, PSDP, InsPlane, 6000000, 0.3_RK ,geom,  Property, minDomain, maxDomain, DEM_opt )
+                                                            !initial velocity m/s
+ 
+!//// iteration loop for 0.1 seconds  
     call DEM%iterate(1)
+        
+    ! sets the velocity of the impeller (user_id = 2)
+    ! rotation speed is 60 RPM and rotation axis is the central shaft    
+    call geom%setWallVelocity( 2, real3(0,0,0), &
+                             RPMtoRAD_S(-120.0_RK), &
+                            p_line( real3(0,0,0) , real3(0,0.75,0.0) ) )
     
-    
-    !/// iteration for 20 more seconds 
-    call DEM%iterate(1000000)
+!/// iteration for 20 seconds
+	call DEM%User_prtclMark(); 
+	
+	do i = 1,20000000
+		call DEM%User_prtclMark(); 
+	    call DEM%iterate(10)
+	end do
+        
     
 end program 

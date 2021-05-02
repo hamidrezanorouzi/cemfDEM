@@ -105,6 +105,7 @@ module g_Prtcl_DefaultValues
     integer(IK),parameter:: OP_Type_VTK    = 1_IK
     integer(IK),parameter:: OP_Type_Tec    = 2_IK
     integer(IK),parameter:: OP_Type_Bin    = 4_IK
+    integer(IK),parameter:: OP_Type_Raw    = 8_IK
     
     
     ! default values 

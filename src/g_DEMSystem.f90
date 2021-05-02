@@ -58,9 +58,9 @@ module g_DEMSystem
     end interface
     
     interface 
-        function User_Mark( id, flag, ptype, dpos ) result (mark)
+        function User_Mark( id, flag, ptype, dpos, oldMark ) result (mark)
             import IK, real4
-            integer(IK),intent(in):: id, flag, ptype
+            integer(IK),intent(in):: id, flag, ptype, oldMark
             type(real4),intent(in):: dpos 
             integer(IK) mark
         end function
@@ -162,6 +162,8 @@ module g_DEMSystem
     ! TecPlot file output for geometry and particels
     procedure:: write_prtcl     => DEMS_write_prtcl
     procedure:: write_geom      => DEMS_write_geom
+    
+    procedure:: writeRawData    => DEMS_WriteRawData
     
     ! VTK file output for particles
     procedure:: PrtclToVTK      => DEMS_PrtclToVTK
@@ -691,6 +693,49 @@ end subroutine
 
 
 !**********************************************************************
+! writing rawData bed condition of particles in an external file
+!**********************************************************************
+subroutine DEMS_WriteRawData(this, num)
+    implicit none
+    class(DEMSystem) this
+    integer(IK),intent(in):: num
+    
+    !// locals 
+    integer(IK):: nUnit = d_wrt_prtc_unit
+    integer(IK) i, num_InDomain
+    character(256) chFile, ch
+
+    !// body
+    
+    ! openning file
+    write(ch,*) this%m_DEM_Options%base_Number + num
+    chFile = trim(this%m_DEM_Options%Res_Dir)//'RawData'//trim(adjustl(ch))//"for"//trim(this%m_DEM_Options%RunName)//".dat"
+    open( file = chFile, unit = nUnit )
+    
+    num_InDomain = this%numInDomain()
+    
+    ! first writing number of particles
+    write( nUnit , * ) "numberOfParticles" , num_inDomain   
+    write( nUnit , * ) "id	type	posision	velocity	mark"
+    ! writing particle data 
+    do i=1,this%numPrtcl
+        
+        if( this%prtcl_flag(i) >= Pflg_inDomain ) then
+            
+            write( nUnit , * ) this%prtcl_ids(i) , &
+                               this%prtcl_type(i), &
+                               this%prtcl_dpos(i), &
+                               this%prtcl_vel(i) , &
+                               this%prtcl_usr_mark(i)
+        end if
+        
+    end do
+    
+    close( nUnit ) 
+
+end subroutine 
+
+!**********************************************************************
 ! writing particle data to a VTK file
 !**********************************************************************
 
@@ -816,6 +861,10 @@ subroutine DEMS_outputFile(this )
             !call this%write_geom(this%iterNumber)
             !call this%write_prtcl(this%iterNumber)
             print*, "*********** Binary file is not specified *****************"
+        end if
+        
+        if( iAND(this%m_DEM_options%OutputFileType,OP_Type_Bin) == OP_Type_Raw ) then
+            call this%writeRawData(this%iterNumber)
         end if
             
     endif
@@ -1172,7 +1221,12 @@ subroutine DEMS_User_prtclMark( this )
     
     do i=1, this%max_nPrtcl
         
-        this%prtcl_usr_mark(i) = User_Mark( this%prtcl_ids(i), this%prtcl_flag(i), this%prtcl_type(i), this%prtcl_dpos(i))
+        this%prtcl_usr_mark(i) = User_Mark  &
+        			( this%prtcl_ids(i), 	&
+        			  this%prtcl_flag(i), 	&
+        			  this%prtcl_type(i), 	&
+        			  this%prtcl_dpos(i),	&
+        			  this%prtcl_usr_mark(i))
         
     end do
     
@@ -1376,6 +1430,8 @@ subroutine DEMS_report_contacts( this )
     chLine = "No. exact contacts P-P | P-W : "// trim( num2str(PP_Cont) ) //" | "//trim(num2str(PW_Cont))
     call MainLogInfo%OutInfo(chLine, 3)
 end subroutine
+
+
 
 
 end module
