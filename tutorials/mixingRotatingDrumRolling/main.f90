@@ -91,10 +91,8 @@ program main
     minDomain = real3(-0.11, -0.11,  -0.01)
     maxDomain = real3( 0.11,  0.11 ,  0.04)
     
-      
     ! initializes DEM system, dt = 0.00002 sec.  
     call DEM%Initialize( 0.00002_RK, Pos ,geom, Property, minDomain, maxDomain, DEM_opt ) 
-    
     
 !//// iteration loop for 0.2 seconds. This lets particles settle under the gravity   
     call DEM%iterate(10000)

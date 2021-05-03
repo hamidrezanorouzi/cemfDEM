@@ -863,7 +863,7 @@ subroutine DEMS_outputFile(this )
             print*, "*********** Binary file is not specified *****************"
         end if
         
-        if( iAND(this%m_DEM_options%OutputFileType,OP_Type_Bin) == OP_Type_Raw ) then
+        if( iAND(this%m_DEM_options%OutputFileType,OP_Type_Raw) == OP_Type_Raw ) then
             call this%writeRawData(this%iterNumber)
         end if
             
