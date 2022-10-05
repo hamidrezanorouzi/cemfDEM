@@ -7,7 +7,7 @@
 [[https://www.cemf.ir/dem-discrete-element-method/cemfdem-2/][file:images/cemfDEM-code-small.png]]
 
 * About cemfDEM
- cemfDem code is a free, open source code for discerete element method (DEM)
+ cemfDem code is a free, open source code for discrete element method (DEM)
  simulaitons. It is developed in FORTRAN standard and can simulate spherical
  particles. The code benefits from various optimization algorithms giving rise
  to its execution speed. Therefore, simulating tens of thousand particles
