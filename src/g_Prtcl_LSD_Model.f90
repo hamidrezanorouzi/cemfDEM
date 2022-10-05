@@ -184,7 +184,7 @@ subroutine LSD_ContactForce_PP(this , ind , lnew )
         
         if( norm(ovlp_t) .gt. 0.0_RK ) then
         
-            if( this%CF_Type == CFT_nLin_l ) then
+            if( this%CF_Type == CFT_LSD_l ) then
                 ! limited overlap
                 ftij = ftij*(ft_fric/ft)
                 ovlp_t = (-1.0_RK) * (ftij/prop_ij%kt)
