@@ -54,8 +54,8 @@ module g_Prtcl_TwoStepIntegration
     
     real(RK),parameter,dimension(3):: AM3_coeff = (/ 5.0_RK/12.0_RK, 8.0_RK/12.0_RK, 1.0_RK/12.0_RK /)
     real(RK),parameter,dimension(4):: AM4_coeff = (/ 9.0_RK/24.0_RK, 19.0_RK/24.0_RK, 5.0_RK/24.0_RK, 1.0_RK/24.0_RK /)
-    real(RK),parameter,dimension(5):: AM5_coeff = (/ 1901.0_RK/720.0_RK, 2774.0_RK/720.0_RK, &
-                                                     2616.0_RK/720.0_RK, 1274.0_RK/720.0_RK , 251.0_RK/720.0_RK /)
+    real(RK),parameter,dimension(5):: AM5_coeff = (/ 251.0_RK/720.0_RK, 646.0_RK/720.0_RK, &
+                                                     264.0_RK/720.0_RK, 106.0_RK/720.0_RK , 19.0_RK/720.0_RK /)
     
     
     type, abstract::  Int_TwoStep_Method
